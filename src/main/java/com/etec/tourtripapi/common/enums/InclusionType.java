@@ -1,4 +1,6 @@
 package com.etec.tourtripapi.common.enums;
 
-public class InclusionType {
+public enum InclusionType {
+    included,
+    excluded
 }
