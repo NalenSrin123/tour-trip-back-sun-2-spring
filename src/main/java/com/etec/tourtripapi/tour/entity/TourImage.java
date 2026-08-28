@@ -1,7 +1,6 @@
 package com.etec.tourtripapi.tour.entity;
 
 import com.etec.tourtripapi.common.enums.EntityStatus;
-import com.etec.tourtripapi.common.enums.InclusionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,21 +16,20 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "included_excluded")
-@SQLDelete(sql = "UPDATE included_excluded SET status = 'inactive' WHERE id=?")
+@Table(name = "tour_images")
+@SQLDelete(sql = "UPDATE tour_images SET status = 'inactive' WHERE id=?")
 @SQLRestriction("status = 'active'")
-public class IncludedExcluded {
+public class TourImage { // Changed to singular
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Using Long because the DB schema specifies BIGINT
+    private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false, columnDefinition = "ENUM('included', 'excluded')")
-    private InclusionType type;
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    @Column(name = "is_primary", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isPrimary = false; // Changed from IsPrimary to camelCase
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", columnDefinition = "ENUM('active', 'inactive') Default 'active'")

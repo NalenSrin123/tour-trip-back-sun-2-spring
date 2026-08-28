@@ -1,4 +1,6 @@
 package com.etec.tourtripapi.common.enums;
 
-public class EntityStatus {
+public enum EntityStatus {
+    active,
+    inactive
 }
