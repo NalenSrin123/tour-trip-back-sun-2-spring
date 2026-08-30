@@ -1,4 +1,4 @@
--- ទី១៖ បង្កើតតារាងការកក់ (Bookings) មុនគេ ព្រោះតារាងផ្សេងទៀតត្រូវពឹងផ្អែកលើវា
+
 CREATE TABLE bookings (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT,
@@ -11,7 +11,6 @@ CREATE TABLE bookings (
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
 
--- ទី២៖ បង្កើតតារាងអ្នកចូលរួម (Participants) ដោយភ្ជាប់ទៅកាន់ Bookings
 CREATE TABLE participants (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     booking_id BIGINT NOT NULL,
@@ -22,7 +21,6 @@ CREATE TABLE participants (
     CONSTRAINT fk_participant_booking FOREIGN KEY (booking_id) REFERENCES bookings(id)
 );
 
--- ទី៣៖ បង្កើតតារាងវិក្កយបត្រ (Invoices) ដោយភ្ជាប់ទៅកាន់ Bookings
 CREATE TABLE invoices (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     booking_id BIGINT NOT NULL,
@@ -35,13 +33,12 @@ CREATE TABLE invoices (
     CONSTRAINT fk_invoice_booking FOREIGN KEY (booking_id) REFERENCES bookings(id)
 );
 
--- ទី៤៖ បង្កើតតារាងបង្កាន់ដៃ (Receipts) 
--- (មិនទាន់ភ្ជាប់ទៅ Payment ទេ ព្រោះ Receipt ឈរឯករាជ្យ ហើយ Payment ជាអ្នកកាន់កូនសោរងរបស់វា)
+
 CREATE TABLE receipts (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     receipt_no VARCHAR(100) UNIQUE,
     issued_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    tour_tittle VARCHAR(255),
+    tour_title VARCHAR(255),
     tour_date DATETIME,
     num_travelers INT,
     sub_total DECIMAL(10,2),
@@ -52,8 +49,7 @@ CREATE TABLE receipts (
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
 
--- ទី៥៖ បង្កើតតារាងការទូទាត់ (Payments) នៅចុងក្រោយគេ
--- ព្រោះវាត្រូវភ្ជាប់ទៅកាន់ទាំង Invoices និង Receipts
+
 CREATE TABLE payments (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     invoice_id BIGINT NOT NULL,
