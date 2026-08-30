@@ -4,13 +4,19 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import com.etec.tourtripapi.common.enums.BookingStatus;
 import com.etec.tourtripapi.common.enums.BookingType;
 
+@Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "bookings")
 @SQLDelete(sql = "UPDATE bookings SET is_deleted = true WHERE id=?")
@@ -42,6 +48,7 @@ public class Booking {
     @Column(name = "member_count")
     private Integer memberCount;
 
+    @Builder.Default
     @Column(name = "is_deleted")
     private boolean isDeleted = false; // for soft delete
 

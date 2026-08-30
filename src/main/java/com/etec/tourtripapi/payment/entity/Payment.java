@@ -3,14 +3,19 @@ package com.etec.tourtripapi.payment.entity;
 import com.etec.tourtripapi.common.enums.PaymentMethod;
 import com.etec.tourtripapi.common.enums.PaymentStatus;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
+@Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "payments")
 @SQLDelete(sql = "UPDATE payments SET is_deleted = true WHERE id = ?")
@@ -40,11 +45,12 @@ public class Payment {
     private PaymentStatus paymentStatus;
 
     @Column(name = "transaction_id")
-    private String transactionId;
+    private Long transactionId;
 
     @Column(name = "payment_date")
     private LocalDateTime paymentDate;
 
+    @Builder.Default
     @Column(name = "is_deleted",nullable = false)
     private boolean isDeleted = false;
 

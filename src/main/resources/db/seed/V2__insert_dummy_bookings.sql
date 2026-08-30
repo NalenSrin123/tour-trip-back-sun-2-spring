@@ -1,8 +1,8 @@
 
 INSERT INTO bookings (user_id, tour_schedule_id, total_price, special_requests, booking_status, booking_type, member_count) 
 VALUES 
-(1, 101, 450.00, 'meals for children', 'CONFIRMED', 'Family', 3),
-(2, 105, 120.00, 'No suggestions', 'PENDING', 'Individual', 1);
+(1, 101, 450.00, 'meals for children', 'Confirmed', 'Family', 3),
+(2, 105, 120.00, 'No suggestions', 'Pending', 'Individual', 1);
 INSERT INTO participants (booking_id, age_group, name, sex) 
 VALUES 
 (1, 'Adult', 'Sok Dara', 'Male'),
@@ -15,7 +15,7 @@ VALUES
 (2, 'INV-2026-0002', 110.00, 10.00, 120.00);
 
 
-INSERT INTO receipts (receipt_no, tour_title, tour_date, num_travelers, sub_total, tax_amount, total_paid, payment_method, pdf_url) 
+INSERT INTO receipts (receipt_no, tour_tittle, tour_date, num_travelers, sub_total, tax_amount, total_paid, payment_method, pdf_url) 
 VALUES 
 ('REC-2026-0001', 'Angkor Wat Tour', '2026-09-15 08:00:00', 3, 400.00, 50.00, 450.00, 'aba_pay', '/uploads/receipts/REC-2026-0001.pdf');
 

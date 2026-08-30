@@ -38,7 +38,7 @@ CREATE TABLE receipts (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     receipt_no VARCHAR(100) UNIQUE,
     issued_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    tour_title VARCHAR(255),
+    tour_tittle VARCHAR(255),
     tour_date DATETIME,
     num_travelers INT,
     sub_total DECIMAL(10,2),

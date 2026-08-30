@@ -2,6 +2,9 @@ package com.etec.tourtripapi.payment.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
@@ -9,8 +12,10 @@ import org.hibernate.annotations.SQLRestriction;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-
+@Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "invoices")
 @SQLDelete(sql = "UPDATE invoices SET is_deleted = true WHERE id = ?")
@@ -41,6 +46,7 @@ public class Invoice {
     @CreationTimestamp()
     private LocalDateTime  issuedAt;
 
+    @Builder.Default
     @Column(name = "is_deleted",nullable = false)
     private Boolean isDeleted = false;
 

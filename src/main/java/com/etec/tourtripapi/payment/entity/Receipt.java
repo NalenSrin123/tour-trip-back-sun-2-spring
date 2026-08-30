@@ -2,14 +2,19 @@ package com.etec.tourtripapi.payment.entity;
 
 import com.etec.tourtripapi.common.enums.PaymentMethod;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
+@Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "receipts")
 @SQLDelete(sql = "UPDATE receipt SET is_deleted = true WHERE id = ?")
@@ -54,6 +59,7 @@ public class Receipt {
     @Column(name = "pdf_url")
     private String pdfUrl;
 
+    @Builder.Default
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
 
