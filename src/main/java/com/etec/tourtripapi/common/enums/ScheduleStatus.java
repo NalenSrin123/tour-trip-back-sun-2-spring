@@ -1,4 +1,8 @@
 package com.etec.tourtripapi.common.enums;
 
-public class ScheduleStatus {
+public enum ScheduleStatus {
+    DRAFT,
+    PUBLISHED,
+    CONFIRMED,
+    CANCELLED
 }
