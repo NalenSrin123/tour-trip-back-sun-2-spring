@@ -37,8 +37,8 @@ public class Category extends Auditable {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(length = 250)
-    private String image;
+    @Column(name = "image_url", length = 250)
+    private String imageUrl;
 
     @Column(nullable = false)
     private Boolean status = true;

@@ -2,18 +2,13 @@ package com.etec.tourtripapi.user.entity;
 
 import com.etec.tourtripapi.common.entity.Auditable;
 import com.etec.tourtripapi.common.enums.UserStatus;
-import com.etec.tourtripapi.role.entity.Role;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -46,18 +41,12 @@ public class User extends Auditable {
 
     private String phone;
 
-    @Column(name = "password_hash", nullable = false)
+    @Column(name = "password_hash")
     private String passwordHash;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "ENUM('active','inactive')")
     private UserStatus status = UserStatus.INACTIVE;
 
     @Column(name = "remember_token", length = 100)
     private String rememberToken;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Role> roles = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SocialAccount> socialAccounts = new ArrayList<>();
 }

@@ -1,8 +1,10 @@
 package com.etec.tourtripapi.role.controller;
 
 import com.etec.tourtripapi.common.response.ApiResponse;
+import com.etec.tourtripapi.role.dto.AssignRoleRequest;
 import com.etec.tourtripapi.role.dto.RoleRequest;
 import com.etec.tourtripapi.role.dto.RoleResponse;
+import com.etec.tourtripapi.role.dto.UserRoleResponse;
 import com.etec.tourtripapi.role.service.RoleService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -30,7 +32,7 @@ public class RoleController {
     public ResponseEntity<ApiResponse<RoleResponse>> create(
             @Valid @RequestBody RoleRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(roleService.create(request)));
+                .body(ApiResponse.success("Role created", roleService.create(request)));
     }
 
     @PutMapping("/{id}")
@@ -45,14 +47,33 @@ public class RoleController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<RoleResponse>>> getByUser(
-            @RequestParam Integer userId) {
-        return ResponseEntity.ok(ApiResponse.success(roleService.getByUserId(userId)));
+    public ResponseEntity<ApiResponse<List<RoleResponse>>> getAll() {
+        return ResponseEntity.ok(ApiResponse.success(roleService.getAll()));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Integer id) {
         roleService.delete(id);
         return ResponseEntity.ok(ApiResponse.success("Role deleted", null));
+    }
+
+    @PostMapping("/assign")
+    public ResponseEntity<ApiResponse<UserRoleResponse>> assign(
+            @Valid @RequestBody AssignRoleRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success("Role assigned", roleService.assignRoleToUser(request)));
+    }
+
+    @DeleteMapping("/unassign")
+    public ResponseEntity<ApiResponse<Void>> unassign(
+            @Valid @RequestBody AssignRoleRequest request) {
+        roleService.removeRoleFromUser(request);
+        return ResponseEntity.ok(ApiResponse.success("Role removed", null));
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<ApiResponse<List<UserRoleResponse>>> getByUser(
+            @PathVariable Integer userId) {
+        return ResponseEntity.ok(ApiResponse.success(roleService.getRolesByUserId(userId)));
     }
 }

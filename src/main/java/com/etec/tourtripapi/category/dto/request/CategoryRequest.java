@@ -18,7 +18,7 @@ public class CategoryRequest {
     private String description;
 
     @Size(max = 250)
-    private String image;
+    private String imageUrl;
 
     private Boolean status;
 }
