@@ -1,11 +1,11 @@
 {
   "info": {
     "name": "Tour Trip API — Payment Module",
-    "description": "Booking, Participant, Invoice, Payment and Receipt endpoints. Pair with the TourTripAPI Local environment (sets {{baseUrl}}).",
+    "description": "Booking, Participant, Invoice, Payment and Receipt endpoints. Pair with the TourTripAPI Local environment (sets {{baseUrl}}). Note: PaymentRequest also accepts an optional receiptId to link an existing receipt (create a receipt first, then re-run Update Payment with { \"invoiceId\": ..., \"receiptId\": ..., \"amount\": ..., \"paymentMethod\": ... } to attach it).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:8081/api/v1" },
+    { "key": "baseUrl", "value": "http://localhost:8080/api/v1" },
     { "key": "bookingId", "value": "1" },
     { "key": "participantId", "value": "1" },
     { "key": "invoiceId", "value": "1" },

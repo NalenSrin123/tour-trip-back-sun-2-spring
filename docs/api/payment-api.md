@@ -1,6 +1,6 @@
 # Payment Module API Reference
 
-Base URL: `http://localhost:8081/api/v1`
+Base URL: `http://localhost:8080/api/v1`
 
 Every endpoint returns the common envelope:
 
@@ -118,19 +118,20 @@ New bookings are always created with `bookingStatus = Pending`.
 | POST | `/payments` | Charge an invoice through the configured payment gateway |
 | GET | `/payments` | List all payments |
 | GET | `/payments/{id}` | Get one payment (includes its receipt, if any) |
-| PUT | `/payments/{id}` | Update `amount`, `paymentMethod` (does **not** re-run the gateway or change status/transaction id) |
+| PUT | `/payments/{id}` | Update `amount`, `paymentMethod`, or attach a `receiptId` (does **not** re-run the gateway or change status/transaction id) |
 | DELETE | `/payments/{id}` | Soft-delete a payment |
 
 **PaymentRequest**
 ```json
 {
   "invoiceId": 1,
+  "receiptId": 1,
   "amount": 450.00,
   "paymentMethod": "aba_pay"
 }
 ```
 
-`paymentMethod` accepts `card`, `bank_transfer`, `aba_pay` — each is routed by `PaymentGatewayFactory` (`payment/gateway`) to its own mock gateway, which returns a `transactionId` (e.g. `ABA-A1B2C3D4`) and a success/failure result. On create, `paymentStatus` becomes `paid` or `failed` accordingly and `paymentDate` is set to now.
+`invoiceId` must reference an existing invoice (404 otherwise). `receiptId` is optional — link an existing receipt if you have one; omit it (or send `null`) to leave the payment without a receipt. `paymentMethod` accepts `card`, `bank_transfer`, `aba_pay` — each is routed by `PaymentGatewayFactory` (`payment/gateway`) to its own mock gateway, which returns a `transactionId` (e.g. `ABA-A1B2C3D4`) and a success/failure result. On create, `paymentStatus` becomes `paid` or `failed` accordingly and `paymentDate` is set to now.
 
 **PaymentResponse**
 ```json
@@ -155,15 +156,24 @@ New bookings are always created with `bookingStatus = Pending`.
 | POST | `/receipts` | Create a receipt |
 | GET | `/receipts` | List all receipts |
 | GET | `/receipts/{id}` | Get one receipt |
-| PUT | `/receipts/{id}` | Update `tourTittle` (`receiptNo` is immutable after creation) |
+| PUT | `/receipts/{id}` | Update any field below (`receiptNo` stays immutable after creation) |
 | DELETE | `/receipts/{id}` | Soft-delete a receipt |
 
 **ReceiptRequest**
 ```json
-{ "receiptNo": "REC-2026-0010", "tourTittle": "Angkor Wat Tour" }
+{
+  "tourTittle": "Angkor Wat Tour",
+  "tourDate": "2026-10-01T07:30:00",
+  "numTravelers": 3,
+  "subTotal": 400.00,
+  "taxAmount": 50.00,
+  "totalPaid": 450.00,
+  "paymentMethod": "aba_pay",
+  "pdfUrl": "/uploads/receipts/REC-2026-0010.pdf"
+}
 ```
 
-`receiptNo` in the request is ignored on create — it is always generated server-side (`REC-XXXXXXXX`).
+`receiptNo` is not part of the request DTO — it is always generated server-side (`REC-XXXXXXXX`). `issuedAt` is likewise not settable; it's stamped automatically at creation time.
 
 ---
 

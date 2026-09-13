@@ -4,12 +4,16 @@ import com.etec.tourtripapi.common.enums.PaymentStatus;
 import com.etec.tourtripapi.common.exception.NotFoundException;
 import com.etec.tourtripapi.payment.dto.request.PaymentRequest;
 import com.etec.tourtripapi.payment.dto.response.PaymentResponse;
+import com.etec.tourtripapi.payment.entity.Invoice;
 import com.etec.tourtripapi.payment.entity.Payment;
+import com.etec.tourtripapi.payment.entity.Receipt;
 import com.etec.tourtripapi.payment.gateway.PaymentGateway;
 import com.etec.tourtripapi.payment.gateway.PaymentGatewayFactory;
 import com.etec.tourtripapi.payment.gateway.PaymentGatewayResult;
 import com.etec.tourtripapi.payment.mapper.PaymentMapper;
+import com.etec.tourtripapi.payment.repository.InvoiceRepository;
 import com.etec.tourtripapi.payment.repository.PaymentRepository;
+import com.etec.tourtripapi.payment.repository.ReceiptRepository;
 import com.etec.tourtripapi.payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,13 +27,25 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PaymentServiceImp implements PaymentService {
     private final PaymentRepository paymentRepository;
+    private final InvoiceRepository invoiceRepository;
+    private final ReceiptRepository receiptRepository;
     private final PaymentMapper paymentMapper;
     private final PaymentGatewayFactory paymentGatewayFactory;
 
     @Override
     @Transactional
     public PaymentResponse createPayment(PaymentRequest request) {
+        Invoice invoice = invoiceRepository.findById(request.getInvoiceId())
+                .orElseThrow(() -> new NotFoundException("Invoice not found with id: " + request.getInvoiceId()));
+
         Payment payment = paymentMapper.toEntity(request);
+        payment.setInvoice(invoice);
+
+        if (request.getReceiptId() != null) {
+            Receipt receipt = receiptRepository.findById(request.getReceiptId())
+                    .orElseThrow(() -> new NotFoundException("Receipt not found with id: " + request.getReceiptId()));
+            payment.setReceipt(receipt);
+        }
 
         PaymentGateway gateway = paymentGatewayFactory.getGateway(payment.getPaymentMethod());
         PaymentGatewayResult result = gateway.process(payment.getAmount());
@@ -49,6 +65,12 @@ public class PaymentServiceImp implements PaymentService {
                 .orElseThrow(() -> new NotFoundException("Payment not found with id: " + id));
 
         paymentMapper.updateEntityFromRequest(request, payment);
+
+        if (request.getReceiptId() != null) {
+            Receipt receipt = receiptRepository.findById(request.getReceiptId())
+                    .orElseThrow(() -> new NotFoundException("Receipt not found with id: " + request.getReceiptId()));
+            payment.setReceipt(receipt);
+        }
 
         Payment savedPayment = paymentRepository.save(payment);
         return paymentMapper.toResponse(savedPayment);

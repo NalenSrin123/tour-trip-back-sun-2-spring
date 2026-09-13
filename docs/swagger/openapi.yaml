@@ -4,7 +4,7 @@ info:
   description: REST API for tour booking, payment, invoice, receipt, and participant management
   version: 1.0.0
 servers:
-  - url: http://localhost:8081/api/v1
+  - url: http://localhost:8080/api/v1
 
 paths:
   /bookings:
@@ -253,7 +253,7 @@ paths:
         '404': { description: Not found }
     put:
       tags: [Payment]
-      summary: Update a payment (amount, paymentMethod only — does not re-run the gateway)
+      summary: Update a payment (amount, paymentMethod, receiptId — does not re-run the gateway)
       requestBody:
         required: true
         content:
@@ -431,6 +431,7 @@ components:
       required: [invoiceId, amount, paymentMethod]
       properties:
         invoiceId: { type: integer, format: int64 }
+        receiptId: { type: integer, format: int64, nullable: true, description: "Optional: link an existing receipt" }
         amount: { type: number, format: decimal }
         paymentMethod: { $ref: '#/components/schemas/PaymentMethod' }
 
@@ -450,8 +451,14 @@ components:
     ReceiptRequest:
       type: object
       properties:
-        receiptNo: { type: string, description: "Ignored on create; server-generated" }
         tourTittle: { type: string }
+        tourDate: { type: string, format: date-time }
+        numTravelers: { type: integer }
+        subTotal: { type: number, format: decimal }
+        taxAmount: { type: number, format: decimal }
+        totalPaid: { type: number, format: decimal }
+        paymentMethod: { $ref: '#/components/schemas/PaymentMethod' }
+        pdfUrl: { type: string }
 
     ReceiptResponse:
       type: object

@@ -1,15 +1,25 @@
 package com.etec.tourtripapi.payment.dto.request;
 
+import com.etec.tourtripapi.common.enums.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReceiptRequest {
-    private String receiptNo;
     private String tourTittle;
+    private LocalDateTime tourDate;
+    private Integer numTravelers;
+    private BigDecimal subTotal;
+    private BigDecimal taxAmount;
+    private BigDecimal totalPaid;
+    private PaymentMethod paymentMethod;
+    private String pdfUrl;
 }

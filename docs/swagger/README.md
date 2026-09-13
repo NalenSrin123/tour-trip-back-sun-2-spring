@@ -2,8 +2,8 @@
 
 The app auto-generates a live spec via springdoc (`config/OpenApiConfig.java`, configured in `application.properties`):
 
-- Swagger UI: `http://localhost:8081/swagger-ui.html`
-- Raw OpenAPI JSON: `http://localhost:8081/v3/api-docs`
+- Swagger UI: `http://localhost:8080/swagger-ui.html`
+- Raw OpenAPI JSON: `http://localhost:8080/v3/api-docs`
 
 [`openapi.yaml`](openapi.yaml) in this folder is a static, hand-maintained snapshot of the same spec — useful for offline viewing, importing into other tools (Postman, Insomnia, code generators), or diffing when the API surface changes. It should be re-synced whenever endpoints or DTOs change.
 

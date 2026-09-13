@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class PaymentRequest {
     private Long invoiceId;
+    private Long receiptId;
     private BigDecimal amount;
     private PaymentMethod paymentMethod;
 }

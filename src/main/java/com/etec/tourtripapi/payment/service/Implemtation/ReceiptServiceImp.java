@@ -24,9 +24,8 @@ public class ReceiptServiceImp implements ReceiptService {
     @Override
     @Transactional
     public ReceiptResponse createReceipt(ReceiptRequest request) {
-        Receipt receipt = new Receipt();
+        Receipt receipt = receiptMapper.toEntity(request);
         receipt.setReceiptNo(CodeGenerator.generate("REC"));
-        receipt.setTourTitle(request.getTourTittle());
 
         Receipt savedReceipt = receiptRepository.save(receipt);
         return receiptMapper.toResponse(savedReceipt);

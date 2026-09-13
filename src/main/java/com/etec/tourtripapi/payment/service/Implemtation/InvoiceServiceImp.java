@@ -4,8 +4,10 @@ import com.etec.tourtripapi.common.exception.NotFoundException;
 import com.etec.tourtripapi.common.utils.CodeGenerator;
 import com.etec.tourtripapi.payment.dto.request.InvoiceRequest;
 import com.etec.tourtripapi.payment.dto.response.InvoiceResponse;
+import com.etec.tourtripapi.payment.entity.Booking;
 import com.etec.tourtripapi.payment.entity.Invoice;
 import com.etec.tourtripapi.payment.mapper.InvoiceMapper;
+import com.etec.tourtripapi.payment.repository.BookingRepository;
 import com.etec.tourtripapi.payment.repository.InvoiceRepository;
 import com.etec.tourtripapi.payment.service.InvoiceService;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +21,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class InvoiceServiceImp implements InvoiceService {
     private final InvoiceRepository invoiceRepository;
+    private final BookingRepository bookingRepository;
     private final InvoiceMapper invoiceMapper;
 
     @Override
     @Transactional
     public InvoiceResponse createInvoice(InvoiceRequest request) {
+        Booking booking = bookingRepository.findById(request.getBookingId())
+                .orElseThrow(() -> new NotFoundException("Booking not found with id: " + request.getBookingId()));
+
         Invoice invoice = invoiceMapper.toEntity(request);
+        invoice.setBooking(booking);
         
         if (invoice.getInvoiceNo() == null) {
             invoice.setInvoiceNo(CodeGenerator.generate("INV"));

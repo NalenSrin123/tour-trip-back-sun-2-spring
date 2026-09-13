@@ -28,8 +28,9 @@ public class BookingServiceImp implements BookingService {
         
         if (booking.getParticipants() != null) {
             booking.getParticipants().forEach(p -> p.setBooking(booking));
+            booking.setMemberCount(booking.getParticipants().size());
         }
-        
+
         booking.setBookingStatus(BookingStatus.Pending);
         
         Booking savedBooking = bookingRepository.save(booking);

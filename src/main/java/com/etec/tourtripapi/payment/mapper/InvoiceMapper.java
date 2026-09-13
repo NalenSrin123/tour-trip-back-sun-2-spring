@@ -4,12 +4,15 @@ import com.etec.tourtripapi.payment.dto.request.InvoiceRequest;
 import com.etec.tourtripapi.payment.dto.response.InvoiceResponse;
 import com.etec.tourtripapi.payment.entity.Invoice;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {PaymentMapper.class})
 public interface InvoiceMapper {
     Invoice toEntity(InvoiceRequest request);
+
+    @Mapping(target = "bookingId", source = "booking.id")
     InvoiceResponse toResponse(Invoice entity);
 
     void updateEntityFromRequest(InvoiceRequest request, @MappingTarget Invoice entity);

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "receipts")
-@SQLDelete(sql = "UPDATE receipt SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE receipts SET is_deleted = true WHERE id = ?")
 @SQLRestriction("is_deleted = false")
 public class Receipt {
     
@@ -31,7 +32,8 @@ public class Receipt {
     @Column(name = "receipt_no",unique = true)
     private String receiptNo;
 
-    @Column(name = "issued_at",insertable = false, updatable = false)
+    @CreationTimestamp
+    @Column(name = "issued_at")
     private LocalDateTime issuedAt;
 
     @Column(name = "tour_tittle")
