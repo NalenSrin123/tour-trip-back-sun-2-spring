@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface InvoiceService {
     InvoiceResponse createInvoice(InvoiceRequest request);
+    InvoiceResponse updateInvoice(Long id, InvoiceRequest request);
     InvoiceResponse getInvoiceById(Long id);
     List<InvoiceResponse> getAllInvoices();
     void deleteInvoice(Long id);

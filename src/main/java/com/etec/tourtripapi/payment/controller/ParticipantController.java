@@ -27,6 +27,14 @@ public class ParticipantController {
         );
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<ParticipantResponse>> updateParticipant(@PathVariable Long id, @RequestBody ParticipantRequest request) {
+        ParticipantResponse response = participantService.updateParticipant(id, request);
+        return ResponseEntity.ok(
+                new ApiResponse<>("Participant updated successfully", 200, response)
+        );
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<ParticipantResponse>> getParticipantById(@PathVariable Long id) {
         ParticipantResponse response = participantService.getParticipantById(id);

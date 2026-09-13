@@ -25,6 +25,14 @@ public class PaymentController {
         );
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<PaymentResponse>> updatePayment(@PathVariable Long id, @RequestBody PaymentRequest request) {
+        PaymentResponse response = paymentService.updatePayment(id, request);
+        return ResponseEntity.ok(
+                new ApiResponse<>("Payment updated successfully", 200, response)
+        );
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<PaymentResponse>> getPaymentById(@PathVariable Long id) {
         PaymentResponse response = paymentService.getPaymentById(id);

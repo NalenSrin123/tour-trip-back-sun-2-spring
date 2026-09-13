@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface ReceiptService {
     ReceiptResponse createReceipt(ReceiptRequest request);
+    ReceiptResponse updateReceipt(Long id, ReceiptRequest request);
     ReceiptResponse getReceiptById(Long id);
     List<ReceiptResponse> getAllReceipts();
     void deleteReceipt(Long id);

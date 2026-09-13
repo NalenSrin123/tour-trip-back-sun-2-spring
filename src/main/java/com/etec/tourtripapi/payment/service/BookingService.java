@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface BookingService {
     BookingResponse createBooking(BookingRequest request);
+    BookingResponse updateBooking(Long id, BookingRequest request);
     BookingResponse getBookingById(Long id);
     List<BookingResponse> getAllBookings();
     void deleteBooking(Long id);

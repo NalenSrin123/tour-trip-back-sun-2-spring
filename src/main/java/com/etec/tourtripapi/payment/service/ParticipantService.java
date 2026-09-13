@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface ParticipantService {
     ParticipantResponse createParticipant(ParticipantRequest request, Long bookingId);
+    ParticipantResponse updateParticipant(Long id, ParticipantRequest request);
     ParticipantResponse getParticipantById(Long id);
     List<ParticipantResponse> getAllParticipants();
     void deleteParticipant(Long id);

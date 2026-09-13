@@ -37,6 +37,18 @@ public class ParticipantServiceImp implements ParticipantService {
     }
 
     @Override
+    @Transactional
+    public ParticipantResponse updateParticipant(Long id, ParticipantRequest request) {
+        Participant participant = participantRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Participant not found with id: " + id));
+
+        participantMapper.updateEntityFromRequest(request, participant);
+
+        Participant savedParticipant = participantRepository.save(participant);
+        return participantMapper.toResponse(savedParticipant);
+    }
+
+    @Override
     public ParticipantResponse getParticipantById(Long id) {
         Participant participant = participantRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Participant not found with id: " + id));

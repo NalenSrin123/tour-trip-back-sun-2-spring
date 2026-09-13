@@ -1,6 +1,7 @@
 package com.etec.tourtripapi.payment.service.Implemtation;
 
 import com.etec.tourtripapi.common.exception.NotFoundException;
+import com.etec.tourtripapi.common.utils.CodeGenerator;
 import com.etec.tourtripapi.payment.dto.request.InvoiceRequest;
 import com.etec.tourtripapi.payment.dto.response.InvoiceResponse;
 import com.etec.tourtripapi.payment.entity.Invoice;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,11 +26,22 @@ public class InvoiceServiceImp implements InvoiceService {
     public InvoiceResponse createInvoice(InvoiceRequest request) {
         Invoice invoice = invoiceMapper.toEntity(request);
         
-        // Generate unique invoice number
         if (invoice.getInvoiceNo() == null) {
-            invoice.setInvoiceNo("INV-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+            invoice.setInvoiceNo(CodeGenerator.generate("INV"));
         }
         
+        Invoice savedInvoice = invoiceRepository.save(invoice);
+        return invoiceMapper.toResponse(savedInvoice);
+    }
+
+    @Override
+    @Transactional
+    public InvoiceResponse updateInvoice(Long id, InvoiceRequest request) {
+        Invoice invoice = invoiceRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Invoice not found with id: " + id));
+
+        invoiceMapper.updateEntityFromRequest(request, invoice);
+
         Invoice savedInvoice = invoiceRepository.save(invoice);
         return invoiceMapper.toResponse(savedInvoice);
     }

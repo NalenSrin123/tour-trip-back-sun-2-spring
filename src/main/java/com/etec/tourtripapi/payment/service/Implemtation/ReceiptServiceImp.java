@@ -1,6 +1,7 @@
 package com.etec.tourtripapi.payment.service.Implemtation;
 
 import com.etec.tourtripapi.common.exception.NotFoundException;
+import com.etec.tourtripapi.common.utils.CodeGenerator;
 import com.etec.tourtripapi.payment.dto.request.ReceiptRequest;
 import com.etec.tourtripapi.payment.dto.response.ReceiptResponse;
 import com.etec.tourtripapi.payment.entity.Receipt;
@@ -11,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,11 +25,21 @@ public class ReceiptServiceImp implements ReceiptService {
     @Transactional
     public ReceiptResponse createReceipt(ReceiptRequest request) {
         Receipt receipt = new Receipt();
-        
-        // Generate unique receipt number
-        receipt.setReceiptNo("REC-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-        receipt.setIssuedAt(LocalDateTime.now());
-        
+        receipt.setReceiptNo(CodeGenerator.generate("REC"));
+        receipt.setTourTitle(request.getTourTittle());
+
+        Receipt savedReceipt = receiptRepository.save(receipt);
+        return receiptMapper.toResponse(savedReceipt);
+    }
+
+    @Override
+    @Transactional
+    public ReceiptResponse updateReceipt(Long id, ReceiptRequest request) {
+        Receipt receipt = receiptRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Receipt not found with id: " + id));
+
+        receiptMapper.updateEntityFromRequest(request, receipt);
+
         Receipt savedReceipt = receiptRepository.save(receipt);
         return receiptMapper.toResponse(savedReceipt);
     }

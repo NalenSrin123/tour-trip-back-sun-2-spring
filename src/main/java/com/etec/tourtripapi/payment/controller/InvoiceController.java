@@ -25,6 +25,14 @@ public class InvoiceController {
         );
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<InvoiceResponse>> updateInvoice(@PathVariable Long id, @RequestBody InvoiceRequest request) {
+        InvoiceResponse response = invoiceService.updateInvoice(id, request);
+        return ResponseEntity.ok(
+                new ApiResponse<>("Invoice updated successfully", 200, response)
+        );
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<InvoiceResponse>> getInvoiceById(@PathVariable Long id) {
         InvoiceResponse response = invoiceService.getInvoiceById(id);

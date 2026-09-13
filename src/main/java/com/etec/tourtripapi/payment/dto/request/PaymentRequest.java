@@ -15,6 +15,5 @@ import java.math.BigDecimal;
 public class PaymentRequest {
     private Long invoiceId;
     private BigDecimal amount;
-    private PaymentMethod  paymentMethod;
-    private Long TransactionId;
+    private PaymentMethod paymentMethod;
 }

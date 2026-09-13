@@ -37,6 +37,18 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
+    @Transactional
+    public BookingResponse updateBooking(Long id, BookingRequest request) {
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Booking not found with id: " + id));
+
+        bookingMapper.updateEntityFromRequest(request, booking);
+
+        Booking savedBooking = bookingRepository.save(booking);
+        return bookingMapper.toResponse(savedBooking);
+    }
+
+    @Override
     public BookingResponse getBookingById(Long id) {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Booking not found with id: " + id));

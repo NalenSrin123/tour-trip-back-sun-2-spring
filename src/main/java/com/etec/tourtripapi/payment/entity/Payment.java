@@ -45,7 +45,7 @@ public class Payment {
     private PaymentStatus paymentStatus;
 
     @Column(name = "transaction_id")
-    private Long transactionId;
+    private String transactionId;
 
     @Column(name = "payment_date")
     private LocalDateTime paymentDate;

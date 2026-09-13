@@ -5,6 +5,9 @@ import com.etec.tourtripapi.common.exception.NotFoundException;
 import com.etec.tourtripapi.payment.dto.request.PaymentRequest;
 import com.etec.tourtripapi.payment.dto.response.PaymentResponse;
 import com.etec.tourtripapi.payment.entity.Payment;
+import com.etec.tourtripapi.payment.gateway.PaymentGateway;
+import com.etec.tourtripapi.payment.gateway.PaymentGatewayFactory;
+import com.etec.tourtripapi.payment.gateway.PaymentGatewayResult;
 import com.etec.tourtripapi.payment.mapper.PaymentMapper;
 import com.etec.tourtripapi.payment.repository.PaymentRepository;
 import com.etec.tourtripapi.payment.service.PaymentService;
@@ -21,14 +24,32 @@ import java.util.stream.Collectors;
 public class PaymentServiceImp implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final PaymentMapper paymentMapper;
+    private final PaymentGatewayFactory paymentGatewayFactory;
 
     @Override
     @Transactional
     public PaymentResponse createPayment(PaymentRequest request) {
         Payment payment = paymentMapper.toEntity(request);
-        payment.setPaymentStatus(PaymentStatus.pending);
+
+        PaymentGateway gateway = paymentGatewayFactory.getGateway(payment.getPaymentMethod());
+        PaymentGatewayResult result = gateway.process(payment.getAmount());
+
+        payment.setPaymentStatus(result.isSuccess() ? PaymentStatus.paid : PaymentStatus.failed);
+        payment.setTransactionId(result.getTransactionId());
         payment.setPaymentDate(LocalDateTime.now());
-        
+
+        Payment savedPayment = paymentRepository.save(payment);
+        return paymentMapper.toResponse(savedPayment);
+    }
+
+    @Override
+    @Transactional
+    public PaymentResponse updatePayment(Long id, PaymentRequest request) {
+        Payment payment = paymentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Payment not found with id: " + id));
+
+        paymentMapper.updateEntityFromRequest(request, payment);
+
         Payment savedPayment = paymentRepository.save(payment);
         return paymentMapper.toResponse(savedPayment);
     }

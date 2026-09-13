@@ -1,0 +1,551 @@
+openapi: 3.0.3
+info:
+  title: Tour Trip API
+  description: REST API for tour booking, payment, invoice, receipt, and participant management
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081/api/v1
+
+paths:
+  /bookings:
+    post:
+      tags: [Booking]
+      summary: Create a booking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BookingRequest' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BookingApiResponse' }
+    get:
+      tags: [Booking]
+      summary: List all bookings
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BookingListApiResponse' }
+  /bookings/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer, format: int64 }
+    get:
+      tags: [Booking]
+      summary: Get a booking by id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BookingApiResponse' }
+        '404': { description: Not found }
+    put:
+      tags: [Booking]
+      summary: Update a booking (userId, tourScheduleId, specialRequests, bookingType only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BookingRequest' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BookingApiResponse' }
+        '404': { description: Not found }
+    delete:
+      tags: [Booking]
+      summary: Soft-delete a booking
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/VoidApiResponse' }
+        '404': { description: Not found }
+
+  /participants:
+    post:
+      tags: [Participant]
+      summary: Add a participant to a booking
+      parameters:
+        - name: bookingId
+          in: query
+          required: true
+          schema: { type: integer, format: int64 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ParticipantRequest' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ParticipantApiResponse' }
+    get:
+      tags: [Participant]
+      summary: List all participants
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ParticipantListApiResponse' }
+  /participants/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer, format: int64 }
+    get:
+      tags: [Participant]
+      summary: Get a participant by id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ParticipantApiResponse' }
+        '404': { description: Not found }
+    put:
+      tags: [Participant]
+      summary: Update a participant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ParticipantRequest' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ParticipantApiResponse' }
+        '404': { description: Not found }
+    delete:
+      tags: [Participant]
+      summary: Soft-delete a participant
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/VoidApiResponse' }
+        '404': { description: Not found }
+
+  /invoices:
+    post:
+      tags: [Invoice]
+      summary: Create an invoice for a booking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/InvoiceRequest' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/InvoiceApiResponse' }
+    get:
+      tags: [Invoice]
+      summary: List all invoices
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/InvoiceListApiResponse' }
+  /invoices/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer, format: int64 }
+    get:
+      tags: [Invoice]
+      summary: Get an invoice by id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/InvoiceApiResponse' }
+        '404': { description: Not found }
+    put:
+      tags: [Invoice]
+      summary: Update an invoice (subTotal, taxAmount, totalAmount only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/InvoiceRequest' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/InvoiceApiResponse' }
+        '404': { description: Not found }
+    delete:
+      tags: [Invoice]
+      summary: Soft-delete an invoice
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/VoidApiResponse' }
+        '404': { description: Not found }
+
+  /payments:
+    post:
+      tags: [Payment]
+      summary: Charge an invoice through the payment gateway
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PaymentRequest' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PaymentApiResponse' }
+        '400': { description: Unsupported payment method }
+    get:
+      tags: [Payment]
+      summary: List all payments
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PaymentListApiResponse' }
+  /payments/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer, format: int64 }
+    get:
+      tags: [Payment]
+      summary: Get a payment by id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PaymentApiResponse' }
+        '404': { description: Not found }
+    put:
+      tags: [Payment]
+      summary: Update a payment (amount, paymentMethod only — does not re-run the gateway)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PaymentRequest' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PaymentApiResponse' }
+        '404': { description: Not found }
+    delete:
+      tags: [Payment]
+      summary: Soft-delete a payment
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/VoidApiResponse' }
+        '404': { description: Not found }
+
+  /receipts:
+    post:
+      tags: [Receipt]
+      summary: Create a receipt
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ReceiptRequest' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReceiptApiResponse' }
+    get:
+      tags: [Receipt]
+      summary: List all receipts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReceiptListApiResponse' }
+  /receipts/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer, format: int64 }
+    get:
+      tags: [Receipt]
+      summary: Get a receipt by id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReceiptApiResponse' }
+        '404': { description: Not found }
+    put:
+      tags: [Receipt]
+      summary: Update a receipt (tourTittle only — receiptNo is immutable)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ReceiptRequest' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReceiptApiResponse' }
+        '404': { description: Not found }
+    delete:
+      tags: [Receipt]
+      summary: Soft-delete a receipt
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/VoidApiResponse' }
+        '404': { description: Not found }
+
+components:
+  schemas:
+    BookingType:
+      type: string
+      enum: [Individual, Family, Team]
+    BookingStatus:
+      type: string
+      enum: [Pending, Confirmed, Cancelled]
+    Sex:
+      type: string
+      enum: [Male, Female, Other]
+    PaymentMethod:
+      type: string
+      enum: [card, bank_transfer, aba_pay]
+    PaymentStatus:
+      type: string
+      enum: [pending, paid, failed, refunded]
+
+    ParticipantRequest:
+      type: object
+      properties:
+        name: { type: string }
+        ageGroup: { type: string }
+        sex: { $ref: '#/components/schemas/Sex' }
+
+    ParticipantResponse:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        name: { type: string }
+        ageGroup: { type: string }
+        sex: { $ref: '#/components/schemas/Sex' }
+
+    BookingRequest:
+      type: object
+      required: [userId, tourScheduleId, bookingType]
+      properties:
+        userId: { type: integer, format: int64 }
+        tourScheduleId: { type: integer, format: int64 }
+        specialRequests: { type: string }
+        bookingType: { $ref: '#/components/schemas/BookingType' }
+        participantRequests:
+          type: array
+          items: { $ref: '#/components/schemas/ParticipantRequest' }
+
+    BookingResponse:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        userId: { type: integer, format: int64 }
+        tourScheduleId: { type: integer, format: int64 }
+        totalPrice: { type: number, format: decimal }
+        specialRequests: { type: string }
+        bookingStatus: { $ref: '#/components/schemas/BookingStatus' }
+        bookingType: { $ref: '#/components/schemas/BookingType' }
+        memberCount: { type: integer }
+        participants:
+          type: array
+          items: { $ref: '#/components/schemas/ParticipantResponse' }
+
+    InvoiceRequest:
+      type: object
+      required: [bookingId]
+      properties:
+        bookingId: { type: integer, format: int64 }
+        subTotal: { type: number, format: decimal }
+        taxAmount: { type: number, format: decimal }
+        totalAmount: { type: number, format: decimal }
+
+    InvoiceResponse:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        bookingId: { type: integer, format: int64 }
+        invoiceNo: { type: string }
+        subTotal: { type: number, format: decimal }
+        taxAmount: { type: number, format: decimal }
+        totalAmount: { type: number, format: decimal }
+        issuedAt: { type: string, format: date-time }
+        payments:
+          type: array
+          items: { $ref: '#/components/schemas/PaymentResponse' }
+
+    PaymentRequest:
+      type: object
+      required: [invoiceId, amount, paymentMethod]
+      properties:
+        invoiceId: { type: integer, format: int64 }
+        amount: { type: number, format: decimal }
+        paymentMethod: { $ref: '#/components/schemas/PaymentMethod' }
+
+    PaymentResponse:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        invoiceId: { type: integer, format: int64 }
+        amount: { type: number, format: decimal }
+        paymentMethod: { $ref: '#/components/schemas/PaymentMethod' }
+        paymentStatus: { $ref: '#/components/schemas/PaymentStatus' }
+        transactionId: { type: string }
+        paymentDate: { type: string, format: date-time }
+        receipt:
+          $ref: '#/components/schemas/ReceiptResponse'
+
+    ReceiptRequest:
+      type: object
+      properties:
+        receiptNo: { type: string, description: "Ignored on create; server-generated" }
+        tourTittle: { type: string }
+
+    ReceiptResponse:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        receiptNo: { type: string }
+        issuedAt: { type: string, format: date-time }
+        tourTitle: { type: string }
+        tourDate: { type: string, format: date-time }
+        numTravelers: { type: integer }
+        subTotal: { type: number, format: decimal }
+        taxAmount: { type: number, format: decimal }
+        totalPaid: { type: number, format: decimal }
+        paymentMethod: { $ref: '#/components/schemas/PaymentMethod' }
+        pdfUrl: { type: string }
+
+    VoidApiResponse:
+      type: object
+      properties:
+        message: { type: string }
+        status: { type: integer }
+        data: { nullable: true }
+
+    BookingApiResponse:
+      type: object
+      properties:
+        message: { type: string }
+        status: { type: integer }
+        data: { $ref: '#/components/schemas/BookingResponse' }
+    BookingListApiResponse:
+      type: object
+      properties:
+        message: { type: string }
+        status: { type: integer }
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/BookingResponse' }
+
+    ParticipantApiResponse:
+      type: object
+      properties:
+        message: { type: string }
+        status: { type: integer }
+        data: { $ref: '#/components/schemas/ParticipantResponse' }
+    ParticipantListApiResponse:
+      type: object
+      properties:
+        message: { type: string }
+        status: { type: integer }
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/ParticipantResponse' }
+
+    InvoiceApiResponse:
+      type: object
+      properties:
+        message: { type: string }
+        status: { type: integer }
+        data: { $ref: '#/components/schemas/InvoiceResponse' }
+    InvoiceListApiResponse:
+      type: object
+      properties:
+        message: { type: string }
+        status: { type: integer }
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/InvoiceResponse' }
+
+    PaymentApiResponse:
+      type: object
+      properties:
+        message: { type: string }
+        status: { type: integer }
+        data: { $ref: '#/components/schemas/PaymentResponse' }
+    PaymentListApiResponse:
+      type: object
+      properties:
+        message: { type: string }
+        status: { type: integer }
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/PaymentResponse' }
+
+    ReceiptApiResponse:
+      type: object
+      properties:
+        message: { type: string }
+        status: { type: integer }
+        data: { $ref: '#/components/schemas/ReceiptResponse' }
+    ReceiptListApiResponse:
+      type: object
+      properties:
+        message: { type: string }
+        status: { type: integer }
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/ReceiptResponse' }

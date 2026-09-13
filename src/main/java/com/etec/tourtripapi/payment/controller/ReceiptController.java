@@ -25,6 +25,14 @@ public class ReceiptController {
         );
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<ReceiptResponse>> updateReceipt(@PathVariable Long id, @RequestBody ReceiptRequest request) {
+        ReceiptResponse response = receiptService.updateReceipt(id, request);
+        return ResponseEntity.ok(
+                new ApiResponse<>("Receipt updated successfully", 200, response)
+        );
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<ReceiptResponse>> getReceiptById(@PathVariable Long id) {
         ReceiptResponse response = receiptService.getReceiptById(id);
