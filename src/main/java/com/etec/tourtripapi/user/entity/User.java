@@ -49,4 +49,7 @@ public class User extends Auditable {
 
     @Column(name = "remember_token", length = 100)
     private String rememberToken;
+
+    @Column(name = "telegram_chat_id", length = 100)
+    private String telegramChatId;
 }
