@@ -1,0 +1,5 @@
+package com.etec.tourtripapi.tour.entity;
+
+public class Booking {
+    
+}
