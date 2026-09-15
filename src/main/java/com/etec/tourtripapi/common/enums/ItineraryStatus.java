@@ -1,9 +1,9 @@
 package com.etec.tourtripapi.common.enums;
 
-public enum ScheduleStatus {
+public enum ItineraryStatus {
+
     draft,
-    published,
-    confirmed,
+    active,
+    completed,
     cancelled,
 }
-

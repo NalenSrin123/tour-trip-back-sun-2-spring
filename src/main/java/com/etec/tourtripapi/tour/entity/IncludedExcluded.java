@@ -1,6 +1,6 @@
 package com.etec.tourtripapi.tour.entity;
 
-import com.etec.tourtripapi.common.enums.EntityStatus;
+import com.etec.tourtripapi.common.enums.IncludedExcludedStatus;
 import com.etec.tourtripapi.common.enums.InclusionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,14 +28,14 @@ public class IncludedExcluded {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, columnDefinition = "ENUM('included', 'excluded')")
-    private InclusionType type;
+    private InclusionType Type;
 
     @Column(columnDefinition = "TEXT")
-    private String description;
+    private String Description;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", columnDefinition = "ENUM('active', 'inactive') Default 'active'")
-    private EntityStatus status = EntityStatus.active;
+    private IncludedExcludedStatus Status = IncludedExcludedStatus.active;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

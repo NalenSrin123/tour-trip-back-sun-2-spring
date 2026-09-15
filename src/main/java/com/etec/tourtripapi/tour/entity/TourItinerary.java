@@ -1,8 +1,9 @@
 package com.etec.tourtripapi.tour.entity;
 
-import com.etec.tourtripapi.common.enums.EntityStatus;
+import com.etec.tourtripapi.common.enums.ItineraryStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder; // បន្ថែម Builder annotation នៅទីនេះផង
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,13 +14,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Data
+@Builder // <--- ត្រូវមាន @Builder ទើបប្រើ .builder() បាន
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "tour_itineraries")
 @SQLDelete(sql = "UPDATE tour_itineraries SET status = 'inactive' WHERE id=?")
 @SQLRestriction("status = 'active'")
-public class TourItinerary { // 1. Changed to Singular
+public class TourItinerary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,27 +31,26 @@ public class TourItinerary { // 1. Changed to Singular
     private Integer dayNumber;
 
     @Column(nullable = false)
-    private String title;
+    private String title; // កែពី Title មក title
 
-    @Column(columnDefinition = "TEXT") // 2. Expanded storage for descriptions
-    private String description;
+    @Column(columnDefinition = "TEXT")
+    private String description; // កែពី Description មក description
 
     @Column(name = "meals_included")
-    private String mealsIncluded;
+    private String mealsIncluded; // កែពី MealsIncluded មក mealsIncluded
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", columnDefinition = "ENUM('active', 'inactive') Default 'active'")
-    private EntityStatus status = EntityStatus.active;
+    private ItineraryStatus status = ItineraryStatus.active; // កែពី Status មក status
 
-    @CreationTimestamp // 3. Auto-manages creation time
+    @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp // 3. Auto-manages update time
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // 4. Added missing relationship to Tour
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tour_id", nullable = false)
     private Tour tour;

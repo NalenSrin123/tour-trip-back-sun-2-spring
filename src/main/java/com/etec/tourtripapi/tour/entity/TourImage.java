@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -23,17 +24,20 @@ public class TourImage { // Changed to singular
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long Id;
 
     @Column(name = "image_url", nullable = false)
-    private String imageUrl;
+    private String ImageUrl;
+
+    @Transient
+    private MultipartFile file;
 
     @Column(name = "is_primary", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean isPrimary = false; // Changed from IsPrimary to camelCase
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", columnDefinition = "ENUM('active', 'inactive') Default 'active'")
-    private EntityStatus status = EntityStatus.active;
+    private EntityStatus Status = EntityStatus.active;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
