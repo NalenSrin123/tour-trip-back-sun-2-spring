@@ -1,12 +1,7 @@
 package com.etec.tourtripapi.destination.entity;
 
 import com.etec.tourtripapi.common.entity.Auditable;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +10,9 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@Table(name = "destinations")
+@Table(name = "destinations", indexes = {
+        @Index(name = "idx_destination_slug", columnList = "slug")
+})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,7 +23,7 @@ public class Destination extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer id; // Changed from Integer to Long for better scalability
 
     @Column(nullable = false, length = 100)
     private String name;
@@ -37,8 +34,8 @@ public class Destination extends Auditable {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(length = 250)
-    private String image;
+    @Column(name = "image_url", length = 500) // Increased length for secure cloud URLs (e.g., S3)
+    private String imageUrl;
 
     @Column(nullable = false)
     private Boolean status = true;

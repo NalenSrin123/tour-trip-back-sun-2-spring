@@ -1,56 +1,59 @@
 package com.etec.tourtripapi.category.controller;
 
-import com.etec.tourtripapi.category.dto.request.CategoryRequest;
-import com.etec.tourtripapi.category.dto.response.CategoryResponse;
-import com.etec.tourtripapi.category.service.CategoryService;
-import com.etec.tourtripapi.common.response.ApiResponse;
+import com.etec.tourtripapi.category.dto.request.CategoryRequestDTO;
+import com.etec.tourtripapi.category.dto.response.CategoryResponseDTO;
+import com.etec.tourtripapi.category.service.CategoryServiceImpl;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/categories")
+@RequestMapping("/api/categories")
 @RequiredArgsConstructor
 public class CategoryController {
 
-    private final CategoryService categoryService;
+    private final CategoryServiceImpl categoryService;
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<CategoryResponse>> create(
-            @Valid @RequestBody CategoryRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(categoryService.create(request)));
+    // 1. Create a new category (Supports multipart/form-data for file upload)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<CategoryResponseDTO> createCategory(@Valid @ModelAttribute CategoryRequestDTO requestDTO) {
+        CategoryResponseDTO response = categoryService.create(requestDTO);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<CategoryResponse>> update(
-            @PathVariable Integer id, @Valid @RequestBody CategoryRequest request) {
-        return ResponseEntity.ok(ApiResponse.success(categoryService.update(id, request)));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<CategoryResponse>> getById(@PathVariable Integer id) {
-        return ResponseEntity.ok(ApiResponse.success(categoryService.getById(id)));
-    }
-
+    // 2. Get all categories
     @GetMapping
-    public ResponseEntity<ApiResponse<List<CategoryResponse>>> getAll() {
-        return ResponseEntity.ok(ApiResponse.success(categoryService.getAll()));
+    public ResponseEntity<List<CategoryResponseDTO>> getAllCategories() {
+        List<CategoryResponseDTO> categories = categoryService.findAll();
+        return ResponseEntity.ok(categories);
     }
 
+    // 3. Get category by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryResponseDTO> getCategoryById(@PathVariable Integer id) {
+        return categoryService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // 4. Update category by ID (Supports updating fields and new image file)
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<CategoryResponseDTO> updateCategory(
+            @PathVariable Integer id,
+            @ModelAttribute CategoryRequestDTO requestDTO) {
+        CategoryResponseDTO response = categoryService.update(id, requestDTO);
+        return ResponseEntity.ok(response);
+    }
+
+    // 5. Delete category (Soft delete)
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Integer id) {
-        categoryService.delete(id);
-        return ResponseEntity.ok(ApiResponse.success("Category deleted", null));
+    public ResponseEntity<Void> deleteCategory(@PathVariable Integer id) {
+        categoryService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
