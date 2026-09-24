@@ -91,6 +91,25 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Java Mail (for Gmail OTP) -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-mail</artifactId>
+</dependency>
+
+<!-- Thymeleaf (for HTML email template) -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+</dependency>
+
+<!-- OkHttp (for Telegram API calls) -->
+<dependency>
+    <groupId>com.squareup.okhttp3</groupId>
+    <artifactId>okhttp</artifactId>
+    <version>4.12.0</version>
+</dependency>
+
 	</dependencies>
 
 	<build>

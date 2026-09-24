@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 500px; margin: 40px auto; background: white;
+                     border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .header { background: #4f46e5; padding: 30px; text-align: center; }
+        .header h1 { color: white; margin: 0; font-size: 22px; }
+        .body { padding: 30px; }
+        .otp-box { background: #f3f4f6; border-radius: 8px; padding: 20px;
+                   text-align: center; margin: 20px 0; }
+        .otp-code { font-size: 38px; font-weight: bold; letter-spacing: 8px;
+                    color: #1e1b4b; }
+        .expiry { color: #ef4444; font-size: 13px; margin-top: 8px; }
+        .footer { text-align: center; padding: 20px; color: #9ca3af; font-size: 12px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Account Verification</h1>
+    </div>
+    <div class="body">
+        <p>Hello <strong th:text="${name}"></strong>,</p>
+        <p>Thank you for registering with us. To complete your registration and secure
+           your account, please use the following One-Time Password (OTP) to verify
+           your email address.</p>
+        <div class="otp-box">
+            <div class="otp-code" th:text="${otp}"></div>
+            <div class="expiry">This code will expire in <span th:text="${expiry}"></span> minutes.</div>
+        </div>
+        <p>If you did not create an account using this email address, please ignore this email.</p>
+    </div>
+    <div class="footer">© 2026 TourBook. All rights reserved.</div>
+</div>
+</body>
+</html>
