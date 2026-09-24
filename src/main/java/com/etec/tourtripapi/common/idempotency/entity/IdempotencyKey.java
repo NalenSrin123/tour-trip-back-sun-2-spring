@@ -27,15 +27,27 @@ public class IdempotencyKey {
     @Column(name = "request_path", nullable = false)
     private String requestPath;
 
-    @Column(name = "response_body", columnDefinition = "TEXT")
-    private String responseBody;
+    @Column(name = "request_body_hash", nullable = false)
+    private String requestBodyHash;
 
     @Column(name = "status", nullable = false)
     private String status;
+
+    @Column(name = "status_code")
+    private Integer statusCode;
+
+    @Column(name = "response_body", columnDefinition = "TEXT")
+    private String responseBody;
+
+    @Column(name = "payment_id")
+    private Integer paymentId;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "expires_at", nullable = false)
+    private LocalDateTime expiresAt;
 }
