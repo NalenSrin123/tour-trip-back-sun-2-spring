@@ -1,0 +1,8 @@
+CREATE TABLE idempotency_keys (
+    idempotency_key VARCHAR(100) PRIMARY KEY,
+    request_path VARCHAR(255) NOT NULL,
+    response_body TEXT,
+    status VARCHAR(50) NOT NULL DEFAULT 'PROCESSING',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

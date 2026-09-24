@@ -45,8 +45,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(IllegalArgumentException ex) {
-    return ResponseEntity.badRequest()
+    public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest()
             .body(ApiResponse.error(ex.getMessage()));
+    }
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+public ResponseEntity<ApiResponse<Void>> handleDataIntegrity(
+        org.springframework.dao.DataIntegrityViolationException ex) {
+    return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(ApiResponse.error("A record with this value already exists"));
 }
 }

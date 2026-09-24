@@ -11,4 +11,5 @@ public interface UserService {
     UserResponse getById(Integer id);
     List<UserResponse> getAll();
     void delete(Integer id);
+    void deleteById(Integer id);
 }

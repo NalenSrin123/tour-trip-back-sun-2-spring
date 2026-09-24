@@ -27,12 +27,14 @@ public class AuthServiceImpl implements AuthService {
     private final TelegramService telegramService;
 
     @Override
-    public AuthUserResponse register(RegisterRequest request) {
-        // 1. Check email not already taken
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new DuplicateResourceException(
-                "Email '" + request.getEmail() + "' is already registered");
-        }
+public AuthUserResponse register(RegisterRequest request) {
+    // 1. Check email not already taken
+    boolean emailExists = userRepository.existsByEmail(request.getEmail());
+
+    if (emailExists) {
+        throw new DuplicateResourceException(
+            "Email '" + request.getEmail() + "' is already registered");
+    }
 
         // 2. Check password confirmation matches
         if (!request.getPassword_hash().equals(request.getPassword_hash_confirmation())) {

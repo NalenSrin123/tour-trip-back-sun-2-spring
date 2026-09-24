@@ -1,5 +1,6 @@
 package com.etec.tourtripapi.user.service;
 
+import com.etec.tourtripapi.auth.repository.OtpRepository;
 import com.etec.tourtripapi.common.enums.UserStatus;
 import com.etec.tourtripapi.common.exception.DuplicateResourceException;
 import com.etec.tourtripapi.common.exception.ResourceNotFoundException;
@@ -23,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final OtpRepository otpRepository;
 
     @Override
     public UserResponse register(CreateUserRequest request) {
@@ -68,5 +70,14 @@ public class UserServiceImpl implements UserService {
     private User findUserOrThrow(Integer id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User " + id + " not found"));
+    }
+
+    @Override 
+    public void deleteById(Integer id) {
+        if (userRepository.countByIdIncludingDeleted(id) == 0) {
+            throw new ResourceNotFoundException("User " + id + " not found");
+        }
+        otpRepository.deleteByUserId(id);
+        userRepository.hardDeleteById(id);
     }
 }
