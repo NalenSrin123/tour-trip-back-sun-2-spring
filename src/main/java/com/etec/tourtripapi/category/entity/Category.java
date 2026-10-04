@@ -2,6 +2,7 @@ package com.etec.tourtripapi.category.entity;
 
 import com.etec.tourtripapi.common.entity.Auditable;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,5 +41,6 @@ public class Category extends Auditable {
     private MultipartFile file;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean status = true;
 }

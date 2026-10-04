@@ -27,14 +27,14 @@ public class AuthServiceImpl implements AuthService {
     private final TelegramService telegramService;
 
     @Override
-public AuthUserResponse register(RegisterRequest request) {
-    // 1. Check email not already taken
-    boolean emailExists = userRepository.existsByEmail(request.getEmail());
+    public AuthUserResponse register(RegisterRequest request) {
+        // 1. Check email not already taken
+        boolean emailExists = userRepository.existsByEmail(request.getEmail());
 
-    if (emailExists) {
-        throw new DuplicateResourceException(
-            "Email '" + request.getEmail() + "' is already registered");
-    }
+        if (emailExists) {
+            throw new DuplicateResourceException(
+                    "Email '" + request.getEmail() + "' is already registered");
+        }
 
         // 2. Check password confirmation matches
         if (!request.getPassword_hash().equals(request.getPassword_hash_confirmation())) {
@@ -95,7 +95,7 @@ public AuthUserResponse register(RegisterRequest request) {
 
         if (user.getStatus() == UserStatus.INACTIVE) {
             throw new IllegalArgumentException(
-                "Account not verified. Please verify your OTP first.");
+                    "Account not verified. Please verify your OTP first.");
         }
 
         // Auto-detect channel for login OTP
@@ -142,8 +142,8 @@ public AuthUserResponse register(RegisterRequest request) {
                         && !request.getPhone().isBlank();
                 if (!hasTelegram && !hasPhone) {
                     throw new IllegalArgumentException(
-                        "Please provide either telegramChatId or phone number " +
-                        "when using channel 'telegram'.");
+                            "Please provide either telegramChatId or phone number " +
+                                    "when using channel 'telegram'.");
                 }
             }
             case "email" -> {
@@ -153,12 +153,12 @@ public AuthUserResponse register(RegisterRequest request) {
                 // phone must be provided
                 if (request.getPhone() == null || request.getPhone().isBlank()) {
                     throw new IllegalArgumentException(
-                        "Phone number is required when channel is 'phone'.");
+                            "Phone number is required when channel is 'phone'.");
                 }
             }
             default -> throw new IllegalArgumentException(
-                "Invalid channel '" + request.getChannel() +
-                "'. Valid options: 'email', 'telegram', 'phone'.");
+                    "Invalid channel '" + request.getChannel() +
+                            "'. Valid options: 'email', 'telegram', 'phone'.");
         }
     }
 
@@ -166,14 +166,14 @@ public AuthUserResponse register(RegisterRequest request) {
     private void sendOtp(User user, String rawOtp, String channel) {
         switch (channel.toLowerCase()) {
             case "telegram" -> telegramService.sendOtp(
-                user.getTelegramChatId(),
-                user.getName(),
-                user.getEmail(),
-                rawOtp);
+                    user.getTelegramChatId(),
+                    user.getName(),
+                    user.getEmail(),
+                    rawOtp);
             default -> emailService.sendOtpEmail(
-                user.getEmail(),
-                user.getName(),
-                rawOtp);
+                    user.getEmail(),
+                    user.getName(),
+                    rawOtp);
         }
     }
 }
